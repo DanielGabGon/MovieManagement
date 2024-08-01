@@ -2,8 +2,12 @@ package com.dangabito.projects.MovieManagement.persistence.entity;
 
 import java.util.List;
 
+import com.dangabito.projects.MovieManagement.util.MovieGenre;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +27,8 @@ public class Movie {
 	@Column(nullable = false)
 	private String director;
 
-	private String genre;
+	@Enumerated(EnumType.STRING)
+	private MovieGenre genre;
 
 	private String releaseYear;
 
@@ -54,11 +59,11 @@ public class Movie {
 		this.director = director;
 	}
 
-	public String getGenre() {
+	public MovieGenre getGenre() {
 		return genre;
 	}
 
-	public void setGenre(String genre) {
+	public void setGenre(MovieGenre genre) {
 		this.genre = genre;
 	}
 
@@ -77,5 +82,6 @@ public class Movie {
 	public void setRatings(List<Rating> ratings) {
 		this.ratings = ratings;
 	}
+
 
 }
