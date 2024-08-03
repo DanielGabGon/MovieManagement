@@ -16,7 +16,7 @@ public interface UserMovieCrudRepository extends JpaRepository<UserMovie, Long> 
 
 	// Esta anotación se pone para indicar que no es consulta.
 	@Modifying
-	void deteteByUsername();
+	int deleteByUsername(String username);
 
 
 }
