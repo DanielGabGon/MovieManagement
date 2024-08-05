@@ -9,6 +9,7 @@ public class ObjectNotfoundException extends RuntimeException {
 	private final Throwable cause;
 
 	public ObjectNotfoundException(String objectNotFoundName) {
+		System.out.println("ENTRA EXCEPTION:" + objectNotFoundName);
 		this.objectNotFoundName = objectNotFoundName;
 		this.cause = null;
 	}
@@ -20,7 +21,9 @@ public class ObjectNotfoundException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		return super.getMessage().concat("(object not found").concat(this.objectNotFoundName).concat(")");
+		String baseMessage = super.getMessage() != null ? super.getMessage() : "";
+		System.out.println("MENSAJE DE RETORNO :" + this.objectNotFoundName);
+		return baseMessage.concat("(object not found").concat(this.objectNotFoundName).concat(")");
 	}
 
 	public String getObjectNotFoundName() {

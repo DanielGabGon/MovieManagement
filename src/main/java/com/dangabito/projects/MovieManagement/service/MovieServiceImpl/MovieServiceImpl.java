@@ -54,7 +54,11 @@ public class MovieServiceImpl implements MovieService {
 	 
 	 @Override
 	 public Movie findOneById(Long id) {
-		 Movie movie= movieCrudRepository.findById(id).orElseThrow(()->new ObjectNotfoundException("[movie"+(id)+"]"));
+			System.out.println("ENTRAMOS A BUSCAR:" + id);
+			Movie movie = movieCrudRepository.findById(id).orElseThrow(
+					() ->
+					new ObjectNotfoundException("[movie" + (id) + "]")
+			);
 		 return movie;
 	 }
 

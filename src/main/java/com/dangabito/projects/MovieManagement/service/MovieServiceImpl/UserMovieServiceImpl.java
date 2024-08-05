@@ -3,12 +3,14 @@ package com.dangabito.projects.MovieManagement.service.MovieServiceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
 import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
 import com.dangabito.projects.MovieManagement.persistence.repository.UserMovieCrudRepository;
 import com.dangabito.projects.MovieManagement.service.UserMovieService;
 
+@Service
 public class UserMovieServiceImpl implements UserMovieService {
 
 	@Autowired
@@ -26,7 +28,8 @@ public class UserMovieServiceImpl implements UserMovieService {
 
 	@Override
 	public UserMovie findOneByUsernameMovie(String username) {
-		return userMovieCrudRepository.findByUsername(username).orElseThrow(()->new ObjectNotfoundException("[userMovie:"+username+"]");
+		return userMovieCrudRepository.findByUsername(username)
+				.orElseThrow(() -> new ObjectNotfoundException("[userMovie:" + username + "]"));
 	}
 
 	@Override

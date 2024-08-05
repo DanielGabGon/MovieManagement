@@ -42,7 +42,7 @@ public class RatingServiceimpl implements RatingService {
 
 	@Override
 	public Rating findOneById(Long id) {
-		return ratingCrudRepository.findById(Id)
+		return ratingCrudRepository.findById(id)
 				.orElseThrow(() -> new ObjectNotfoundException("[rating:" + Long.toString(id) + "]"));
 	}
 
