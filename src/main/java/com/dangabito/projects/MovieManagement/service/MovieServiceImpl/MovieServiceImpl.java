@@ -83,6 +83,7 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	public Movie createOne(Movie movie) {
+		System.out.println("OBJETO:" + movie.toString());
 		return movieCrudRepository.save(movie);
 	}
 
