@@ -5,8 +5,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
+
+
+
 
 public interface UserMovieCrudRepository extends JpaRepository<UserMovie, Long> {
 
@@ -16,6 +20,7 @@ public interface UserMovieCrudRepository extends JpaRepository<UserMovie, Long> 
 
 	// Esta anotación se pone para indicar que no es consulta.
 	@Modifying
+	@Transactional
 	int deleteByUsername(String username);
 
 

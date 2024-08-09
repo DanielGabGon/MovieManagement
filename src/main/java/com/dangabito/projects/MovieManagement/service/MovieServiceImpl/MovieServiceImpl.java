@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
 import com.dangabito.projects.MovieManagement.persistence.entity.Movie;
@@ -11,7 +12,10 @@ import com.dangabito.projects.MovieManagement.persistence.repository.MovieCrudRe
 import com.dangabito.projects.MovieManagement.service.MovieService;
 import com.dangabito.projects.MovieManagement.util.MovieGenre;
 
+
+
 @Service
+@Transactional
 public class MovieServiceImpl implements MovieService {
 
 	@Autowired
@@ -21,6 +25,7 @@ public class MovieServiceImpl implements MovieService {
 	 * Este viene de la Interface JpaRepository
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public List<Movie> findAll() {
 		return movieCrudRepository.findAll();
 	}
@@ -29,6 +34,7 @@ public class MovieServiceImpl implements MovieService {
 	 * Este viene de la Interface MovieCrudRepository
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public List<Movie> findAllByTitle(String title) {
 		return movieCrudRepository.findByTitleContaining(title);
 	}
@@ -38,6 +44,7 @@ public class MovieServiceImpl implements MovieService {
 	 * Este viene de la Interface MovieCrudRepository
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public List<Movie> findAllByGenre(MovieGenre genre) {
 		return movieCrudRepository.findByGenre(genre);
 	}
@@ -48,11 +55,13 @@ public class MovieServiceImpl implements MovieService {
 	 */
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title) {
 		return movieCrudRepository.findByGenreAndTitleContaining(genre, title);
 	}
 	 
 	 @Override
+		@Transactional(readOnly = true)
 	 public Movie findOneById(Long id) {
 			System.out.println("ENTRAMOS A BUSCAR:" + id);
 			Movie movie = movieCrudRepository.findById(id).orElseThrow(
