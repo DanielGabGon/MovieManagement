@@ -18,6 +18,5 @@ public interface UserMovieService {
 
 	void deleteOneByUsername(String username);
 
-	void deleteAll();
 
 }

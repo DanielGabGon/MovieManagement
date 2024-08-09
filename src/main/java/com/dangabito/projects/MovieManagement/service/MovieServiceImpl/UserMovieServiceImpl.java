@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
-import com.dangabito.projects.MovieManagement.persistence.entity.Movie;
 import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
 import com.dangabito.projects.MovieManagement.persistence.repository.MovieCrudRepository;
 import com.dangabito.projects.MovieManagement.persistence.repository.UserMovieCrudRepository;
 import com.dangabito.projects.MovieManagement.service.UserMovieService;
-import com.dangabito.projects.MovieManagement.util.MovieGenre;
 
 
 
@@ -69,17 +67,6 @@ public class UserMovieServiceImpl implements UserMovieService {
 		if (deleteRecords != 1) {
 			throw new ObjectNotfoundException("[userMovie:" + username + "]");
 		}
-	}
-
-	@Override
-	public void deleteAll() {
-		Movie newMovie = new Movie();
-		newMovie.setTitle(null);
-		newMovie.setGenre(MovieGenre.ACTION);
-		newMovie.setReleaseYear(2004);
-		newMovie.setDirector("Sam Reimi");
-		userMovieCrudRepository.deleteAll();
-		movieCrudRepository.save(newMovie);
 	}
 
 }

@@ -84,11 +84,4 @@ public class UserMovieController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
-	@DeleteMapping
-	public ResponseEntity<Void> deleteAll() {
-		userMovieService.deleteAll();
-		return ResponseEntity.noContent().build();
-	}
-
 }
