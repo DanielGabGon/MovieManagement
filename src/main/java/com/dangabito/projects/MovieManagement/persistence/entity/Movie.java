@@ -1,8 +1,12 @@
 package com.dangabito.projects.MovieManagement.persistence.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.dangabito.projects.MovieManagement.util.MovieGenre;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +35,11 @@ public class Movie {
 	private MovieGenre genre;
 
 	private int releaseYear;
+
+	@CreationTimestamp
+	@JsonFormat(pattern = "yyyy/MM/dd - HH:mm:ss")
+	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private LocalDateTime createATime;
 
 	@OneToMany(targetEntity = Rating.class, fetch = FetchType.EAGER, mappedBy = "movie")
 	private List<Rating> ratings;
@@ -83,6 +92,14 @@ public class Movie {
 
 	public void setReleaseYear(int releaseYear) {
 		this.releaseYear = releaseYear;
+	}
+
+	public LocalDateTime getCreateATime() {
+		return createATime;
+	}
+
+	public void setCreateATime(LocalDateTime createATime) {
+		this.createATime = createATime;
 	}
 
 }

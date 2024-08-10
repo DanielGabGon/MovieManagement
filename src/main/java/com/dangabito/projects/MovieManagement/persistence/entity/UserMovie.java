@@ -1,6 +1,12 @@
 package com.dangabito.projects.MovieManagement.persistence.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +31,13 @@ public class UserMovie {
 	@Column(nullable = false)
 	private String password;
 
+	@CreationTimestamp
+	@JsonFormat(pattern = "yyyy/MM/dd - HH:mm:ss")
+	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private LocalDateTime createATime;
+
 	@OneToMany(targetEntity = Rating.class, fetch = FetchType.EAGER, mappedBy = "userMovie")
+	@JsonManagedReference
 	private List<Rating> ratings;
 
 	public Long getId() {
@@ -66,6 +78,14 @@ public class UserMovie {
 
 	public void setRatings(List<Rating> ratings) {
 		this.ratings = ratings;
+	}
+
+	public LocalDateTime getCreateATime() {
+		return createATime;
+	}
+
+	public void setCreateATime(LocalDateTime createATime) {
+		this.createATime = createATime;
 	}
 
 }
