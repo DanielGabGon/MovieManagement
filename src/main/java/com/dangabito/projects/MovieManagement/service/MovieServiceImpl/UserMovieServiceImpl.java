@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
+import com.dangabito.projects.MovieManagement.dto.response.GetUser;
 import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
+import com.dangabito.projects.MovieManagement.mapper.UserMovieMapper;
 import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
 import com.dangabito.projects.MovieManagement.persistence.repository.MovieCrudRepository;
 import com.dangabito.projects.MovieManagement.persistence.repository.UserMovieCrudRepository;
@@ -26,35 +29,43 @@ public class UserMovieServiceImpl implements UserMovieService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserMovie> findAll() {
-		return userMovieCrudRepository.findAll();
+	public List<GetUser> findAll() {
+		List<UserMovie> entities = userMovieCrudRepository.findAll();
+		return UserMovieMapper.toGetDtoList(entities);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserMovie> findAllByName(String name) {
-		return userMovieCrudRepository.findByNameContaining(name);
+	public List<GetUser> findAllByName(String name) {
+		List<UserMovie> entities = userMovieCrudRepository.findByNameContaining(name);
+		return UserMovieMapper.toGetDtoList(entities);
 	}
 
-	@Override
 	@Transactional(readOnly = true)
-	public UserMovie findOneByUsernameMovie(String username) {
+	private UserMovie findOneEntityByUsernameMovie(String username) {
 		return userMovieCrudRepository.findByUsername(username)
 				.orElseThrow(() -> new ObjectNotfoundException("[userMovie:" + username + "]"));
+
 	}
 
 	@Override
-	public UserMovie updateOneByUserName(String username, UserMovie userMovie) {
-		UserMovie oldUserMovie = this.findOneByUsernameMovie(username);
-		oldUserMovie.setName(userMovie.getName());
-		oldUserMovie.setPassword(userMovie.getPassword());
+	@Transactional(readOnly = true)
+	public GetUser findOneByUsernameMovie(String username) {
+		return UserMovieMapper.toGetDto(this.findOneEntityByUsernameMovie(username));
 
-		return userMovieCrudRepository.save(oldUserMovie);
 	}
 
 	@Override
-	public UserMovie creteOne(UserMovie userMovie) {
-		return userMovieCrudRepository.save(userMovie);
+	public GetUser updateOneByUserName(String username, SaveUser saveDto) {
+		UserMovie oldUserMovie = this.findOneEntityByUsernameMovie(username);
+		UserMovieMapper.updateEntity(oldUserMovie, saveDto);
+		return UserMovieMapper.toGetDto(userMovieCrudRepository.save(oldUserMovie));
+	}
+
+	@Override
+	public GetUser creteOne(SaveUser saveDto) {
+		UserMovie newUserMovie = UserMovieMapper.toEntity(saveDto);
+		return UserMovieMapper.toGetDto(userMovieCrudRepository.save(newUserMovie));
 	}
 
 	@Override

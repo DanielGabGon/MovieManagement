@@ -2,26 +2,27 @@ package com.dangabito.projects.MovieManagement.service;
 
 import java.util.List;
 
-import com.dangabito.projects.MovieManagement.persistence.entity.Movie;
+import com.dangabito.projects.MovieManagement.dto.request.SaveMovie;
+import com.dangabito.projects.MovieManagement.dto.response.GetMovie;
 import com.dangabito.projects.MovieManagement.util.MovieGenre;
 
 public interface MovieService {
 	
 	// Los metodos de servicio
 	// se tienen que llamar igual que los metodos de repositorio.
-	List<Movie> findAll();
+	List<GetMovie> findAll();
 
-	List<Movie> findAllByTitle(String title);
+	List<GetMovie> findAllByTitle(String title);
 
-	List<Movie> findAllByGenre(MovieGenre genre);
+	List<GetMovie> findAllByGenre(MovieGenre genre);
 
-	List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title);
+	List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title);
 
-	Movie findOneById(Long id);
+	GetMovie findOneById(Long id);
 
-	Movie updateOneById(Long id, Movie movie);
+	GetMovie updateOneById(Long id, SaveMovie movie);
 
-	Movie createOne(Movie movie);
+	GetMovie createOne(SaveMovie movie);
 
 	void deleteOneById(Long id);
 

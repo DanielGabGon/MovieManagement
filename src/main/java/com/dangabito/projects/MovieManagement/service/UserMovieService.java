@@ -2,19 +2,20 @@ package com.dangabito.projects.MovieManagement.service;
 
 import java.util.List;
 
-import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
+import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
+import com.dangabito.projects.MovieManagement.dto.response.GetUser;
 
 public interface UserMovieService {
 
-	List<UserMovie> findAll();
+	List<GetUser> findAll();
 
-	List<UserMovie> findAllByName(String name);
+	List<GetUser> findAllByName(String name);
 
-	UserMovie findOneByUsernameMovie(String username);
+	GetUser findOneByUsernameMovie(String username);
 
-	UserMovie updateOneByUserName(String username, UserMovie userMovie);
+	GetUser updateOneByUserName(String username, SaveUser saveDto);
 
-	UserMovie creteOne(UserMovie userMovie);
+	GetUser creteOne(SaveUser saveDto);
 
 	void deleteOneByUsername(String username);
 

@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
+import com.dangabito.projects.MovieManagement.dto.response.GetUser;
 import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
-import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
 import com.dangabito.projects.MovieManagement.service.UserMovieService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,11 +31,11 @@ public class UserMovieController {
 	private UserMovieService userMovieService;
 
 	@GetMapping
-	public ResponseEntity<List<UserMovie>> findAll(@RequestParam(required = false) String name) {
+	public ResponseEntity<List<GetUser>> findAll(@RequestParam(required = false) String name) {
 
 		System.out.println("Entre metodo findAll UserMovie");
 
-		List<UserMovie> usuarios = null;
+		List<GetUser> usuarios = null;
 
 		if (StringUtils.hasText(name)) {
 			System.out.println("Entro NAME:" + name);
@@ -47,7 +48,7 @@ public class UserMovieController {
 	}
 
 	@GetMapping(value = "/{username}")
-	public ResponseEntity<UserMovie> findOneByUsername(@PathVariable("username") String username) {
+	public ResponseEntity<GetUser> findOneByUsername(@PathVariable("username") String username) {
 		try {
 			return ResponseEntity.ok(userMovieService.findOneByUsernameMovie(username));
 		} catch (ObjectNotfoundException e) {
@@ -57,18 +58,17 @@ public class UserMovieController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserMovie> createOne(@RequestBody UserMovie newUserMovie, HttpServletRequest request) {
-		UserMovie userMovieCreate = userMovieService.creteOne(newUserMovie);
+	public ResponseEntity<GetUser> createOne(@RequestBody SaveUser saveDto, HttpServletRequest request) {
+		GetUser userMovieCreate = userMovieService.creteOne(saveDto);
 		String baseUrl = request.getRequestURL().toString();
-		URI newLocationUri = URI.create(baseUrl + "/" + userMovieCreate.getUsername());
+		URI newLocationUri = URI.create(baseUrl + "/" + saveDto.username());
 		return ResponseEntity.created(newLocationUri).body(userMovieCreate);
 	}
 
 	@PutMapping(value = "/{username}")
-	public ResponseEntity<UserMovie> updateOneByUsername(@PathVariable String username,
-			@RequestBody UserMovie userMovie) {
+	public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username, @RequestBody SaveUser saveDto) {
 		try {
-			UserMovie updateMovie = userMovieService.updateOneByUserName(username, userMovie);
+			GetUser updateMovie = userMovieService.updateOneByUserName(username, saveDto);
 			return ResponseEntity.ok(updateMovie);
 		} catch (ObjectNotfoundException e) {
 			return ResponseEntity.notFound().build();

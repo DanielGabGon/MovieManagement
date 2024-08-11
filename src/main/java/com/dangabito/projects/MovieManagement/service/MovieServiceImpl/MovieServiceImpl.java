@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dangabito.projects.MovieManagement.dto.request.SaveMovie;
+import com.dangabito.projects.MovieManagement.dto.response.GetMovie;
 import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
+import com.dangabito.projects.MovieManagement.mapper.MovieMapper;
 import com.dangabito.projects.MovieManagement.persistence.entity.Movie;
 import com.dangabito.projects.MovieManagement.persistence.repository.MovieCrudRepository;
 import com.dangabito.projects.MovieManagement.service.MovieService;
@@ -26,8 +29,9 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Movie> findAll() {
-		return movieCrudRepository.findAll();
+	public List<GetMovie> findAll() {
+		List<Movie> entities = movieCrudRepository.findAll();
+		return MovieMapper.toGetDtoList(entities);
 	}
 
 	/**
@@ -35,65 +39,65 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Movie> findAllByTitle(String title) {
-		return movieCrudRepository.findByTitleContaining(title);
-	}
-
-	/**
-	 * /**
-	 * Este viene de la Interface MovieCrudRepository
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Movie> findAllByGenre(MovieGenre genre) {
-		return movieCrudRepository.findByGenre(genre);
+	public List<GetMovie> findAllByTitle(String title) {
+		List<Movie> entities = movieCrudRepository.findByTitleContaining(title);
+		return MovieMapper.toGetDtoList(entities);
 	}
 
 	/**
 	 * /**
 	 * Este viene de la Interface MovieCrudRepository
 	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<GetMovie> findAllByGenre(MovieGenre genre) {
+		List<Movie> entities = movieCrudRepository.findByGenre(genre);
+		return MovieMapper.toGetDtoList(entities);
+	}
+
+	/**
+	 * /**
+	 * Este viene de la Interface MovieCrudRepository
+	 */
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title) {
-		return movieCrudRepository.findByGenreAndTitleContaining(genre, title);
+	public List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title) {
+		List<Movie> entities = movieCrudRepository.findByGenreAndTitleContaining(genre, title);
+		return MovieMapper.toGetDtoList(entities);
 	}
 	 
-	 @Override
-		@Transactional(readOnly = true)
-	 public Movie findOneById(Long id) {
-			System.out.println("ENTRAMOS A BUSCAR:" + id);
-			Movie movie = movieCrudRepository.findById(id).orElseThrow(
-					() ->
-					new ObjectNotfoundException("[movie" + (id) + "]")
-			);
-		 return movie;
-	 }
+	@Transactional(readOnly = true)
+	private Movie findOneEntityById(Long id) {
+		return movieCrudRepository.findById(id).orElseThrow(() -> new ObjectNotfoundException("[movie" + (id) + "]"));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public GetMovie findOneById(Long id) {
+		System.out.println("ENTRAMOS A BUSCAR:" + id);
+		return MovieMapper.toGetDto(this.findOneEntityById(id));
+	}
+
 
 	/**
 	 * 
 	 */
 	@Override
-	public Movie updateOneById(Long id, Movie newMovie) {
-		
-		Movie oldMovie=this.findOneById(id);
-		
-		oldMovie.setGenre(newMovie.getGenre());
-		oldMovie.setReleaseYear(newMovie.getReleaseYear());
-		oldMovie.setTitle(newMovie.getTitle());
-		oldMovie.setDirector(newMovie.getDirector());
-		
-		return movieCrudRepository.save(oldMovie);
+	public GetMovie updateOneById(Long id, SaveMovie saveDto) {
+		Movie oldMovie = this.findOneEntityById(id);
+		MovieMapper.updateEntity(oldMovie, saveDto);
+		return MovieMapper.toGetDto(movieCrudRepository.save(oldMovie));
 	}
 	
 	/**
 	 * Este viene de la Interface JpaRepository
 	 */
 	@Override
-	public Movie createOne(Movie movie) {
-		System.out.println("OBJETO:" + movie.toString());
-		return movieCrudRepository.save(movie);
+	public GetMovie createOne(SaveMovie saveDto) {
+		System.out.println("OBJETO:" + saveDto.toString());
+		Movie newMovie = MovieMapper.toEntity(saveDto);
+		return MovieMapper.toGetDto(movieCrudRepository.save(newMovie));
 	}
 
 	/**
@@ -101,7 +105,7 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	public void deleteOneById(Long id) {
-		Movie movie= this.findOneById(id);
+		Movie movie = this.findOneEntityById(id);
 		movieCrudRepository.delete(movie);
 	}
 }

@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,12 +29,10 @@ public class UserMovie {
 	private String password;
 
 	@CreationTimestamp
-	@JsonFormat(pattern = "yyyy/MM/dd - HH:mm:ss")
 	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createATime;
 
 	@OneToMany(targetEntity = Rating.class, fetch = FetchType.EAGER, mappedBy = "userMovie")
-	@JsonManagedReference
 	private List<Rating> ratings;
 
 	public Long getId() {
