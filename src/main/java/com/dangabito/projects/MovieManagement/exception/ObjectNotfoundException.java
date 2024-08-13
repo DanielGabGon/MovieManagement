@@ -1,6 +1,12 @@
 package com.dangabito.projects.MovieManagement.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class ObjectNotfoundException extends RuntimeException {
+
+	private static Logger logger = LoggerFactory.getLogger(ObjectNotfoundException.class);
 
 	private static final long serialVersionUID = -6472582166204179025L;
 
@@ -9,7 +15,7 @@ public class ObjectNotfoundException extends RuntimeException {
 	private final Throwable cause;
 
 	public ObjectNotfoundException(String objectNotFoundName) {
-		System.out.println("ENTRA EXCEPTION:" + objectNotFoundName);
+		logger.info("ENTRA EXCEPTION:{}", objectNotFoundName);
 		this.objectNotFoundName = objectNotFoundName;
 		this.cause = null;
 	}
@@ -22,7 +28,7 @@ public class ObjectNotfoundException extends RuntimeException {
 	@Override
 	public String getMessage() {
 		String baseMessage = super.getMessage() != null ? super.getMessage() : "";
-		System.out.println("MENSAJE DE RETORNO :" + this.objectNotFoundName);
+		logger.info("MENSAJE DE RETORNO :{}", this.objectNotFoundName);
 		return baseMessage.concat("(object not found").concat(this.objectNotFoundName).concat(")");
 	}
 

@@ -2,7 +2,6 @@ package com.dangabito.projects.MovieManagement.service.MovieServiceImpl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,11 @@ import com.dangabito.projects.MovieManagement.service.RatingService;
 @Transactional
 public class RatingServiceimpl implements RatingService {
 
-	@Autowired
+
+	public RatingServiceimpl() {
+
+	}
+
 	private RatingCrudRepository ratingCrudRepository;
 
 	/**
@@ -54,7 +57,7 @@ public class RatingServiceimpl implements RatingService {
 
 	@Override
 	public Rating updateOneByRatingId(Long id, Rating rating) {
-		Rating oldRating = this.findOneById(id);
+		Rating oldRating = findOneById(id);
 		oldRating.setUserId(rating.getUserId());
 		oldRating.setMovieId(rating.getMovieId());
 
@@ -68,7 +71,6 @@ public class RatingServiceimpl implements RatingService {
 
 	@Override
 	public void deleteOneById(Long id) {
-		// Rating rating = this.findOneById(id);
 		boolean exist= ratingCrudRepository.existsById(id);
 		if(exist) {
 			ratingCrudRepository.deleteById(id);

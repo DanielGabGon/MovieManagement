@@ -2,6 +2,8 @@ package com.dangabito.projects.MovieManagement.service.MovieServiceImpl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,17 @@ import com.dangabito.projects.MovieManagement.util.MovieGenre;
 @Transactional
 public class MovieServiceImpl implements MovieService {
 
-	@Autowired
+	private static Logger logger = LoggerFactory.getLogger(MovieServiceImpl.class);
+	public MovieServiceImpl() {
+	}
+
+
 	private MovieCrudRepository movieCrudRepository;
+
+	@Autowired
+	public void setMovieCrudRepository(MovieCrudRepository movieCrudRepository) {
+		this.movieCrudRepository = movieCrudRepository;
+	}
 
 	/**
 	 * Este viene de la Interface JpaRepository
@@ -75,8 +86,8 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	@Transactional(readOnly = true)
 	public GetMovie findOneById(Long id) {
-		System.out.println("ENTRAMOS A BUSCAR:" + id);
-		return MovieMapper.toGetDto(this.findOneEntityById(id));
+		logger.info("ENTRAMOS A BUSCAR:{}", id);
+		return MovieMapper.toGetDto(findOneEntityById(id));
 	}
 
 
@@ -85,7 +96,7 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	public GetMovie updateOneById(Long id, SaveMovie saveDto) {
-		Movie oldMovie = this.findOneEntityById(id);
+		Movie oldMovie = findOneEntityById(id);
 		MovieMapper.updateEntity(oldMovie, saveDto);
 		return MovieMapper.toGetDto(movieCrudRepository.save(oldMovie));
 	}
@@ -95,7 +106,7 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	public GetMovie createOne(SaveMovie saveDto) {
-		System.out.println("OBJETO:" + saveDto.toString());
+		logger.info("OBJETO:{}", saveDto);
 		Movie newMovie = MovieMapper.toEntity(saveDto);
 		return MovieMapper.toGetDto(movieCrudRepository.save(newMovie));
 	}
@@ -105,7 +116,8 @@ public class MovieServiceImpl implements MovieService {
 	 */
 	@Override
 	public void deleteOneById(Long id) {
-		Movie movie = this.findOneEntityById(id);
+		Movie movie = findOneEntityById(id);
 		movieCrudRepository.delete(movie);
 	}
+
 }

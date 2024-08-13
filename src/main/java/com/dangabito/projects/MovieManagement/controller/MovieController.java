@@ -3,6 +3,8 @@ package com.dangabito.projects.MovieManagement.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -23,6 +25,7 @@ import com.dangabito.projects.MovieManagement.service.MovieService;
 import com.dangabito.projects.MovieManagement.util.MovieGenre;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 
 
@@ -30,7 +33,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/movies")
 public class MovieController {
 
-	@Autowired
+	private static Logger logger = LoggerFactory.getLogger(MovieController.class);
+
 	private MovieService movieService;
 
 	/**
@@ -44,7 +48,7 @@ public class MovieController {
 	@GetMapping
 	public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title,
 			@RequestParam(required = false) MovieGenre genre) {
-		System.out.println("ENTRE AL MÉTODO FINDALL CON PARÁMETROS  ");
+		logger.info("ENTRE AL MÉTODO FINDALL CON PARÁMETROS ");
 		List<GetMovie> movies = null;
 
 		// title!=null && title.isBlank() asi o como esta en el if
@@ -57,30 +61,24 @@ public class MovieController {
 		} else {
 			movies = movieService.findAll();
 		}
-		// HttpHeaders headers = new HttpHeaders();
-
-		// return new ResponseEntity<List<Movie>>(peliculas, headers, HttpStatus.OK);//
-		// opción 1
-		// return ResponseEntity.status(HttpStatus.OK).body(peliculas); // opciòn 2
 		return ResponseEntity.ok(movies);
 	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<GetMovie> findOneById(@PathVariable Long id) {
-		System.out.println("BUSCANDO EL id:" + id);
+
+		logger.info("BUSCANDO EL id: {}", id);
 		try {
 			return ResponseEntity.ok(movieService.findOneById(id));
 
 		} catch (ObjectNotfoundException e) {
-			// return ResponseEntity.status(404).build();
 			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@PostMapping
-	public ResponseEntity<GetMovie> createOne(@RequestBody SaveMovie saveDto, HttpServletRequest request) {
-		System.out.println("ENTRO AL METODO GUARDAR:");
-
+	public ResponseEntity<GetMovie> createOne(@Valid @RequestBody SaveMovie saveDto, HttpServletRequest request) {
+//		logger.info("ENTRO AL METODO GUARDAR:{}", saveDto.availabilityEndTime());
 		GetMovie movieCreatedMovie = movieService.createOne(saveDto);
 		String baseUrl = request.getRequestURL().toString();
 		URI newLocation = URI.create(baseUrl + "/" + movieCreatedMovie.id());
@@ -89,7 +87,7 @@ public class MovieController {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<GetMovie> updateOneById(@PathVariable Long id, @RequestBody SaveMovie saveDto) {
+	public ResponseEntity<GetMovie> updateOneById(@PathVariable Long id, @Valid @RequestBody SaveMovie saveDto) {
 		try {
 			GetMovie updateMovie = movieService.updateOneById(id, saveDto);
 			return ResponseEntity.ok(updateMovie);
@@ -108,5 +106,10 @@ public class MovieController {
 		}
 	}
 
+
+	@Autowired
+	public void setMovieService(MovieService movieService) {
+		this.movieService = movieService;
+	}
 
 }

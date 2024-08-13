@@ -1,5 +1,6 @@
 package com.dangabito.projects.MovieManagement.mapper;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
@@ -7,6 +8,10 @@ import com.dangabito.projects.MovieManagement.dto.response.GetUser;
 import com.dangabito.projects.MovieManagement.persistence.entity.UserMovie;
 
 public class UserMovieMapper {
+
+	public UserMovieMapper() {
+		throw new UnsupportedOperationException("No se permite instanciar esta clase.");
+	}
 
 	public static GetUser toGetDto(UserMovie entity) {
 		if (entity == null)
@@ -18,7 +23,7 @@ public class UserMovieMapper {
 
 	public static List<GetUser> toGetDtoList(List<UserMovie> entities) {
 		if (entities == null)
-			return null;
+			return Collections.emptyList();
 
 		List<GetUser> listaGetUser = entities.stream().map(each -> UserMovieMapper.toGetDto(each)).toList();// entities.stream().map(UserMovieMapper::toGetDto).toList()
 

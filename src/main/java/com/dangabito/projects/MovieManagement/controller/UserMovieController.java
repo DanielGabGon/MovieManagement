@@ -1,8 +1,11 @@
 package com.dangabito.projects.MovieManagement.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -22,26 +25,26 @@ import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
 import com.dangabito.projects.MovieManagement.service.UserMovieService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
 public class UserMovieController {
 
-	@Autowired
+	private static Logger logger = LoggerFactory.getLogger(UserMovieController.class);
+
 	private UserMovieService userMovieService;
 
 	@GetMapping
 	public ResponseEntity<List<GetUser>> findAll(@RequestParam(required = false) String name) {
 
-		System.out.println("Entre metodo findAll UserMovie");
-
+		logger.info("Entre metodo findAll UserMovie");
 		List<GetUser> usuarios = null;
-
+		logger.info("Entro NAME:{}", name);
 		if (StringUtils.hasText(name)) {
-			System.out.println("Entro NAME:" + name);
 			usuarios = userMovieService.findAllByName(name);
 		} else {
-			System.out.println("Entro TODOS");
+			logger.info("Entro TODOS");
 			usuarios = userMovieService.findAll();
 		}
 		return ResponseEntity.ok(usuarios);
@@ -52,13 +55,13 @@ public class UserMovieController {
 		try {
 			return ResponseEntity.ok(userMovieService.findOneByUsernameMovie(username));
 		} catch (ObjectNotfoundException e) {
-			// return ResponseEntity.status(404).build();
 			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@PostMapping
-	public ResponseEntity<GetUser> createOne(@RequestBody SaveUser saveDto, HttpServletRequest request) {
+	public ResponseEntity<GetUser> createOne(@Valid @RequestBody SaveUser saveDto, HttpServletRequest request)
+			throws UnsupportedEncodingException {
 		GetUser userMovieCreate = userMovieService.creteOne(saveDto);
 		String baseUrl = request.getRequestURL().toString();
 		URI newLocationUri = URI.create(baseUrl + "/" + saveDto.username());
@@ -66,7 +69,8 @@ public class UserMovieController {
 	}
 
 	@PutMapping(value = "/{username}")
-	public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username, @RequestBody SaveUser saveDto) {
+	public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username,
+			@Valid @RequestBody SaveUser saveDto) {
 		try {
 			GetUser updateMovie = userMovieService.updateOneByUserName(username, saveDto);
 			return ResponseEntity.ok(updateMovie);
@@ -83,5 +87,10 @@ public class UserMovieController {
 		} catch (ObjectNotfoundException e) {
 			return ResponseEntity.notFound().build();
 		}
+	}
+
+	@Autowired
+	public void setUserMovieService(UserMovieService userMovieService) {
+		this.userMovieService = userMovieService;
 	}
 }

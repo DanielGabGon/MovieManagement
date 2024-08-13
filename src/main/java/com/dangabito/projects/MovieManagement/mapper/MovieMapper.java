@@ -1,5 +1,6 @@
 package com.dangabito.projects.MovieManagement.mapper;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dangabito.projects.MovieManagement.dto.request.SaveMovie;
@@ -7,6 +8,9 @@ import com.dangabito.projects.MovieManagement.dto.response.GetMovie;
 import com.dangabito.projects.MovieManagement.persistence.entity.Movie;
 
 public class MovieMapper {
+
+	public MovieMapper() {
+	}
 
 	public static GetMovie toGetDto(Movie entity) {
 		if (entity == null)
@@ -18,7 +22,7 @@ public class MovieMapper {
 
 	public static List<GetMovie> toGetDtoList(List<Movie> entities) {
 		if (entities == null)
-			return null;
+			return Collections.emptyList();
 		return entities.stream().map(each -> MovieMapper.toGetDto(each)).toList(); // entities.stream().map(MovieMapper::toGetDto).toList()
 	}
 

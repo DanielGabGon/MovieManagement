@@ -12,7 +12,7 @@ public interface RatingService {
 
 	List<Rating> findAllByUsername(String username);
 
-	Rating findOneById(Long Id);
+	Rating findOneById(Long id);
 
 	Rating updateOneByRatingId(Long id, Rating rating);
 

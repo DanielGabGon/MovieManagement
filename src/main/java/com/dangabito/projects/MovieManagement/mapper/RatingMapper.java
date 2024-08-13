@@ -1,5 +1,6 @@
 package com.dangabito.projects.MovieManagement.mapper;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dangabito.projects.MovieManagement.dto.response.GetMovie;
@@ -19,7 +20,7 @@ public class RatingMapper {
 
 	public static List<GetMovie.GetRating> toGetMovieRatingDtoList(List<Rating> entities) {
 		if (entities == null)
-			return null;
+			return Collections.emptyList();
 		return entities.stream().map(each -> RatingMapper.toGetMovieRatingDto(each)).toList();
 	}
 
@@ -34,7 +35,7 @@ public class RatingMapper {
 
 	public static List<GetUser.GetRating> toGetUserRatingDtoList(List<Rating> entities) {
 		if (entities == null)
-			return null;
+			return Collections.emptyList();
 		return entities.stream().map(each -> RatingMapper.toGetUserRatingDto(each)).toList();
 	}
 
