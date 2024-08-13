@@ -52,11 +52,7 @@ public class UserMovieController {
 
 	@GetMapping(value = "/{username}")
 	public ResponseEntity<GetUser> findOneByUsername(@PathVariable("username") String username) {
-		try {
 			return ResponseEntity.ok(userMovieService.findOneByUsernameMovie(username));
-		} catch (ObjectNotfoundException e) {
-			return ResponseEntity.notFound().build();
-		}
 	}
 
 	@PostMapping
