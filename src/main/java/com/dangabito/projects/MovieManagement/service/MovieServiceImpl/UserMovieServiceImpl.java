@@ -3,10 +3,8 @@ package com.dangabito.projects.MovieManagement.service.MovieServiceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
 import com.dangabito.projects.MovieManagement.dto.response.GetUser;
@@ -53,9 +51,7 @@ public class UserMovieServiceImpl implements UserMovieService {
 	@Transactional(readOnly = true)
 	public UserMovie findOneEntityByUsernameMovie(String username) {
 		return userMovieCrudRepository.findByUsername(username)
-				.orElseThrow(
-						() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "User not found:" + username));
-//				.orElseThrow(() -> new ObjectNotfoundException("[userMovie:" + username + "]"));
+				.orElseThrow(() -> new ObjectNotfoundException("[userMovie:" + username + "]"));
 
 	}
 

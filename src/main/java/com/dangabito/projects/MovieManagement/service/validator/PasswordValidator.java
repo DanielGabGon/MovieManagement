@@ -1,6 +1,8 @@
 package com.dangabito.projects.MovieManagement.service.validator;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dangabito.projects.MovieManagement.exception.InvalidPasswordException;
 
@@ -8,7 +10,8 @@ public class PasswordValidator {
 
 	public static void validatePassword(String password, String passwordRepeated) {
 		if (!StringUtils.hasText(password) || !StringUtils.hasText(passwordRepeated)) {
-			throw new IllegalArgumentException("Passwords must contain data");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST.value(), "Passwords must contain data",
+					new IllegalArgumentException("Passwords must contain data"));
 		}
 
 		if (!password.equals(passwordRepeated)) {
