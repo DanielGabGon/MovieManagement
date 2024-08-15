@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
 import com.dangabito.projects.MovieManagement.dto.response.GetUser;
-import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
 import com.dangabito.projects.MovieManagement.service.UserMovieService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ public class UserMovieController {
 
 	@GetMapping
 	public ResponseEntity<List<GetUser>> findAll(@RequestParam(required = false) String name) {
-
 		logger.info("Entre metodo findAll UserMovie");
 		List<GetUser> usuarios = null;
 		logger.info("Entro NAME:{}", name);
@@ -52,12 +50,13 @@ public class UserMovieController {
 
 	@GetMapping(value = "/{username}")
 	public ResponseEntity<GetUser> findOneByUsername(@PathVariable("username") String username) {
-			return ResponseEntity.ok(userMovieService.findOneByUsernameMovie(username));
+		return ResponseEntity.ok(userMovieService.findOneByUsernameMovie(username));
 	}
 
 	@PostMapping
 	public ResponseEntity<GetUser> createOne(@Valid @RequestBody SaveUser saveDto, HttpServletRequest request)
 			throws UnsupportedEncodingException {
+		logger.info("INICIANDO..!");
 		GetUser userMovieCreate = userMovieService.creteOne(saveDto);
 		String baseUrl = request.getRequestURL().toString();
 		URI newLocationUri = URI.create(baseUrl + "/" + saveDto.username());
@@ -67,22 +66,14 @@ public class UserMovieController {
 	@PutMapping(value = "/{username}")
 	public ResponseEntity<GetUser> updateOneByUsername(@PathVariable String username,
 			@Valid @RequestBody SaveUser saveDto) {
-		try {
-			GetUser updateMovie = userMovieService.updateOneByUserName(username, saveDto);
-			return ResponseEntity.ok(updateMovie);
-		} catch (ObjectNotfoundException e) {
-			return ResponseEntity.notFound().build();
-		}
+		GetUser updateMovie = userMovieService.updateOneByUserName(username, saveDto);
+		return ResponseEntity.ok(updateMovie);
 	}
 
 	@DeleteMapping(value = "/{username}")
 	public ResponseEntity<Void> deleteOneByUsername(@PathVariable String username) {
-		try {
-			userMovieService.deleteOneByUsername(username);
-			return ResponseEntity.noContent().build();
-		} catch (ObjectNotfoundException e) {
-			return ResponseEntity.notFound().build();
-		}
+		userMovieService.deleteOneByUsername(username);
+		return ResponseEntity.noContent().build();
 	}
 
 	@Autowired

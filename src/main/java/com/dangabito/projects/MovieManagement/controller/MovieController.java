@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dangabito.projects.MovieManagement.dto.request.SaveMovie;
 import com.dangabito.projects.MovieManagement.dto.response.GetMovie;
-import com.dangabito.projects.MovieManagement.exception.ObjectNotfoundException;
 import com.dangabito.projects.MovieManagement.service.MovieService;
 import com.dangabito.projects.MovieManagement.util.MovieGenre;
 
@@ -36,6 +35,11 @@ public class MovieController {
 	private static Logger logger = LoggerFactory.getLogger(MovieController.class);
 
 	private MovieService movieService;
+
+	@Autowired
+	public void setMovieService(MovieService movieService) {
+		this.movieService = movieService;
+	}
 
 	/**
 	 * Parametros
@@ -66,6 +70,7 @@ public class MovieController {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<GetMovie> findOneById(@PathVariable Long id) {
+		logger.info("LANZANDO GET EN BUSQUEDA :{}", id);
 			return ResponseEntity.ok(movieService.findOneById(id));
 	}
 
@@ -81,28 +86,13 @@ public class MovieController {
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<GetMovie> updateOneById(@PathVariable Long id, @Valid @RequestBody SaveMovie saveDto) {
-		try {
 			GetMovie updateMovie = movieService.updateOneById(id, saveDto);
 			return ResponseEntity.ok(updateMovie);
-		} catch (ObjectNotfoundException e) {
-			return ResponseEntity.notFound().build();
-		}
 	}
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteOneById(@PathVariable Long id) {
-		try {
 			movieService.deleteOneById(id);
 			return ResponseEntity.noContent().build();
-		} catch (ObjectNotfoundException e) {
-			return ResponseEntity.notFound().build();
-		}
 	}
-
-
-	@Autowired
-	public void setMovieService(MovieService movieService) {
-		this.movieService = movieService;
-	}
-
 }
