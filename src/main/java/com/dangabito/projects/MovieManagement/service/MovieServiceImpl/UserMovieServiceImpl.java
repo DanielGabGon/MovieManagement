@@ -2,6 +2,8 @@ package com.dangabito.projects.MovieManagement.service.MovieServiceImpl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import com.dangabito.projects.MovieManagement.service.validator.PasswordValidato
 @Service
 @Transactional
 public class UserMovieServiceImpl implements UserMovieService {
+	private static Logger logger = LoggerFactory.getLogger(UserMovieServiceImpl.class);
 
 
 	public UserMovieServiceImpl() {
@@ -73,8 +76,9 @@ public class UserMovieServiceImpl implements UserMovieService {
 
 	@Override
 	public GetUser creteOne(SaveUser saveDto) {
+		logger.info("AQUI PARA VALIDAR PASSWORD");
 		PasswordValidator.validatePassword(saveDto.password(), saveDto.passwordRepeated());
-
+		logger.info("AQUI DESPUES VALIDAR PASSWORD");
 		UserMovie newUserMovie = UserMovieMapper.toEntity(saveDto);
 		return UserMovieMapper.toGetDto(userMovieCrudRepository.save(newUserMovie));
 	}

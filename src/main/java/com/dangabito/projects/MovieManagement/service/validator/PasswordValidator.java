@@ -1,17 +1,19 @@
 package com.dangabito.projects.MovieManagement.service.validator;
 
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.dangabito.projects.MovieManagement.exception.InvalidPasswordException;
 
 public class PasswordValidator {
+	private static Logger logger = LoggerFactory.getLogger(PasswordValidator.class);
+
 
 	public static void validatePassword(String password, String passwordRepeated) {
 		if (!StringUtils.hasText(password) || !StringUtils.hasText(passwordRepeated)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST.value(), "Passwords must contain data",
-					new IllegalArgumentException("Passwords must contain data"));
+			logger.info("ESTE NO ES TOMADO EN CUENTA:{}", password);
+			throw new IllegalArgumentException("Passwords must contain data");
 		}
 
 		if (!password.equals(passwordRepeated)) {
