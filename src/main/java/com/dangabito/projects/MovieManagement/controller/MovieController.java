@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dangabito.projects.MovieManagement.dto.request.MovieSearchCriteria;
 import com.dangabito.projects.MovieManagement.dto.request.SaveMovie;
 import com.dangabito.projects.MovieManagement.dto.response.GetMovie;
 import com.dangabito.projects.MovieManagement.service.MovieService;
@@ -41,6 +41,20 @@ public class MovieController {
 		this.movieService = movieService;
 	}
 
+	@GetMapping
+	public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title,
+			@RequestParam(required = false) MovieGenre genre,
+			@RequestParam(required = false, value = "min_release_year") Integer minReleaseYear,
+			@RequestParam(required = false, value = "max_release_year") Integer maxReleaseYear,
+			@RequestParam(required = false, value = "min_average_rating") Integer minAverageRating) {
+		logger.info("ENTRE AL MÉTODO FINDALL CON PARÁMETROS ");
+		MovieSearchCriteria serachCriteria = new MovieSearchCriteria(title, genre, minReleaseYear, maxReleaseYear,
+				minAverageRating);
+		List<GetMovie> movies = null;
+		movies = movieService.findAll(serachCriteria);
+		return ResponseEntity.ok(movies);
+	}
+
 	/**
 	 * Parametros
 	 * 
@@ -49,24 +63,24 @@ public class MovieController {
 	 *              genre
 	 * @return
 	 */
-	@GetMapping
-	public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title,
-			@RequestParam(required = false) MovieGenre genre) {
-		logger.info("ENTRE AL MÉTODO FINDALL CON PARÁMETROS ");
-		List<GetMovie> movies = null;
-
-		// title!=null && title.isBlank() asi o como esta en el if
-		if (StringUtils.hasText(title) && genre != null) {
-			movies = movieService.findAllByGenreAndTitle(genre, title);
-		} else if (StringUtils.hasText(title)) {
-			movies = movieService.findAllByTitle(title);
-		} else if (genre != null) {
-			movies = movieService.findAllByGenre(genre);
-		} else {
-			movies = movieService.findAll();
-		}
-		return ResponseEntity.ok(movies);
-	}
+//	@GetMapping
+//	public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title,
+//			@RequestParam(required = false) MovieGenre genre) {
+//		logger.info("ENTRE AL MÉTODO FINDALL CON PARÁMETROS ");
+//		List<GetMovie> movies = null;
+//
+//		// title!=null && title.isBlank() asi o como esta en el if
+//		if (StringUtils.hasText(title) && genre != null) {
+//			movies = movieService.findAllByGenreAndTitle(genre, title);
+//		} else if (StringUtils.hasText(title)) {
+//			movies = movieService.findAllByTitle(title);
+//		} else if (genre != null) {
+//			movies = movieService.findAllByGenre(genre);
+//		} else {
+//			movies = movieService.findAll();
+//		}
+//		return ResponseEntity.ok(movies);
+//	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<GetMovie> findOneById(@PathVariable Long id) {
