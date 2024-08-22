@@ -1,11 +1,14 @@
 package com.dangabito.projects.MovieManagement.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,16 +45,23 @@ public class MovieController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<GetMovie>> findAll(@RequestParam(required = false) String title,
+	public ResponseEntity<Page<GetMovie>> findAll(@RequestParam(required = false) String title,
 			@RequestParam(required = false) MovieGenre genre,
 			@RequestParam(required = false, value = "min_release_year") Integer minReleaseYear,
 			@RequestParam(required = false, value = "max_release_year") Integer maxReleaseYear,
-			@RequestParam(required = false, value = "min_average_rating") Integer minAverageRating) {
+			@RequestParam(required = false, value = "min_average_rating") Integer minAverageRating,
+			@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+			@RequestParam(required = false, defaultValue = "10") Integer pageSize,
+			@RequestParam(required = false, defaultValue = "id") String sortBy) {
 		logger.info("ENTRE AL MÉTODO FINDALL CON PARÁMETROS ");
+
+		Sort movieSort = Sort.by(sortBy.trim());
+		Pageable moviePagable = PageRequest.of(pageNumber, pageSize, movieSort);
+
 		MovieSearchCriteria serachCriteria = new MovieSearchCriteria(title, genre, minReleaseYear, maxReleaseYear,
 				minAverageRating);
-		List<GetMovie> movies = null;
-		movies = movieService.findAll(serachCriteria);
+		Page<GetMovie> movies = null;
+		movies = movieService.findAll(serachCriteria, moviePagable);
 		return ResponseEntity.ok(movies);
 	}
 
