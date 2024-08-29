@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,18 +48,14 @@ public class MovieController {
 			@RequestParam(required = false, value = "min_release_year") Integer minReleaseYear,
 			@RequestParam(required = false, value = "max_release_year") Integer maxReleaseYear,
 			@RequestParam(required = false, value = "min_average_rating") Integer minAverageRating,
-			@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-			@RequestParam(required = false, defaultValue = "10") Integer pageSize,
-			@RequestParam(required = false, defaultValue = "id") String sortBy) {
+			Pageable moviePageable) {
 		logger.info("ENTRE AL MÉTODO FINDALL CON PARÁMETROS ");
 
-		Sort movieSort = Sort.by(sortBy.trim());
-		Pageable moviePagable = PageRequest.of(pageNumber, pageSize, movieSort);
 
 		MovieSearchCriteria serachCriteria = new MovieSearchCriteria(title, genre, minReleaseYear, maxReleaseYear,
 				minAverageRating);
 		Page<GetMovie> movies = null;
-		movies = movieService.findAll(serachCriteria, moviePagable);
+		movies = movieService.findAll(serachCriteria, moviePageable);
 		return ResponseEntity.ok(movies);
 	}
 
