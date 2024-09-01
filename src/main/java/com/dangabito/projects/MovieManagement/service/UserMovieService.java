@@ -1,15 +1,16 @@
 package com.dangabito.projects.MovieManagement.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.dangabito.projects.MovieManagement.dto.request.SaveUser;
 import com.dangabito.projects.MovieManagement.dto.response.GetUser;
 
 public interface UserMovieService {
 
-	List<GetUser> findAll();
+	Page<GetUser> findAll(String name, Pageable pageable);
 
-	List<GetUser> findAllByName(String name);
+	Page<GetUser> findAllByName(String name, Pageable pageable);
 
 	GetUser findOneByUsernameMovie(String username);
 

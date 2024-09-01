@@ -2,13 +2,13 @@ package com.dangabito.projects.MovieManagement.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,16 +35,12 @@ public class UserMovieController {
 	private UserMovieService userMovieService;
 
 	@GetMapping
-	public ResponseEntity<List<GetUser>> findAll(@RequestParam(required = false) String name) {
+	public ResponseEntity<Page<GetUser>> findAll(@RequestParam(required = false) String name,
+			Pageable pageable) {
 		logger.info("Entre metodo findAll UserMovie");
-		List<GetUser> usuarios = null;
-		logger.info("Entro NAME:{}", name);
-		if (StringUtils.hasText(name)) {
-			usuarios = userMovieService.findAllByName(name);
-		} else {
-			logger.info("Entro TODOS");
-			usuarios = userMovieService.findAll();
-		}
+
+		Page<GetUser> usuarios = userMovieService.findAll(name, pageable);
+
 		return ResponseEntity.ok(usuarios);
 	}
 

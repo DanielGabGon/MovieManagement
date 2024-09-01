@@ -1,10 +1,10 @@
 package com.dangabito.projects.MovieManagement.service.MovieServiceImpl;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,16 +39,18 @@ public class UserMovieServiceImpl implements UserMovieService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<GetUser> findAll() {
-		List<UserMovie> entities = userMovieCrudRepository.findAll();
-		return UserMovieMapper.toGetDtoList(entities);
+	public Page<GetUser> findAll(String name, Pageable pageable) {
+		Page<UserMovie> entities = userMovieCrudRepository.findByNameContaining(name, pageable);
+//		return UserMovieMapper.toGetDtoList(entities);
+		return entities.map(entity -> UserMovieMapper.toGetDto(entity));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<GetUser> findAllByName(String name) {
-		List<UserMovie> entities = userMovieCrudRepository.findByNameContaining(name);
-		return UserMovieMapper.toGetDtoList(entities);
+	public Page<GetUser> findAllByName(String name, Pageable pageable) {
+		Page<UserMovie> entities = userMovieCrudRepository.findByNameContaining(name, pageable);
+//		return UserMovieMapper.toGetDtoList(entities);
+		return entities.map(entity -> UserMovieMapper.toGetDto(entity));
 	}
 
 	@Transactional(readOnly = true)
