@@ -10,7 +10,7 @@ public class MovieManagementApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MovieManagementApplication.class, args);
-
+       System.out.println("INICIO");   
 		String texto = "HolaHola";
 		String texto1;
 		String texto2;
