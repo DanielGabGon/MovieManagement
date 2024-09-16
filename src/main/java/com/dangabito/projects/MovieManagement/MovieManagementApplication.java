@@ -10,6 +10,18 @@ public class MovieManagementApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MovieManagementApplication.class, args);
+
+		String texto = "HolaHola";
+		String texto1;
+		String texto2;
+		int palabra = texto.length() / 2;
+
+		System.out.println("PALABRA:" + palabra);
+		System.out.println("total:" + texto.length());
+		texto1 = texto.substring(0, palabra);
+		texto2 = texto.substring(palabra, texto.length());
+		System.out.println("TEXTO 1 :" + texto1);
+		System.out.println("TEXTO 2 :" + texto2);
 	}
 
 //	@Autowired
